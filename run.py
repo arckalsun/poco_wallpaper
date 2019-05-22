@@ -22,29 +22,20 @@ def run():
     imgSet = set()
     spider = PocoSpider()
     while True:
+        for filename in spider.run():
+            if filename and filename not in imgSet:
+                timeStr = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
+                print('[%s]切换下一张：%s' % (timeStr, filename))
+                win32gui.SystemParametersInfo(win32con.SPI_SETDESKWALLPAPER, filename, 3)
+                imgSet.add(filename)
 
-        spider.run()
-
-        # 轮播图片
-        for root, dirs, files in os.walk(spider.localImageDir):
-            for imgName in files:
-                if imgName:
-                    filename = os.path.abspath(root+imgName)
-                    if filename not in imgSet:
-                        timeStr = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
-                        print('[%s]切换下一张：%s' % (timeStr, filename))
-                        win32gui.SystemParametersInfo(win32con.SPI_SETDESKWALLPAPER, filename, 3)
-                        imgSet.add(filename)
-
-                        # time.sleep(SWITCH_TIME)
-                        t = threading.Thread(target=input, args=('键入[回车]切换\n',))
-                        t.start()
-                        t.join(SWITCH_TIME)
-
+                # time.sleep(SWITCH_TIME)
+                t = threading.Thread(target=input, args=('键入[回车]切换\n',))
+                t.start()
+                t.join(SWITCH_TIME)
 
         print('轮播结束，共轮播了%s张图片' % len(imgSet))
-        # time.sleep(60)
-        instr = input('按回车键切换下一个')
+        time.sleep(60)
         print('开始新一轮')
 
 if __name__ == '__main__':

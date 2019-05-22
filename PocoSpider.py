@@ -36,7 +36,7 @@ class PocoSpider(object):
             worksUrl = works['works_url']
             try:
                 if worksUrl not in self.loadedWorksUrl:
-                    self.loadWorkDetail(worksUrl)
+                    yield self.loadWorkDetail(worksUrl)
                     self.loadedWorksUrl.add(worksUrl)
             except TypeError:
                 pass
@@ -47,9 +47,10 @@ class PocoSpider(object):
         for ct in (1,2,3,4,6,21,22):
             for wt in ('day','medal','editor'):
                 try:
-                    self.loadWorksListByType(ct,wt)
+                    yield from self.loadWorksListByType(ct,wt)
                 except Exception as e:
                     print('加载失败ct=%s, wt=%s。异常: %s' % (ct,wt,str(e)))
+
 
     def loadWorksListByType(self, classify_type=0, works_type='medal'):
         '''加载勋章作品
@@ -73,7 +74,7 @@ class PocoSpider(object):
         soup = BeautifulSoup(resp.text, 'lxml')
         textarea = soup.find(name='textarea', attrs={"jsonname": "works_list_json"})
         worksInfo = json.loads(textarea.text)
-        self._parseWorksInfo(worksInfo)
+        yield from self._parseWorksInfo(worksInfo)
 
     def loadUserCenter(self, user_id: int):
         '''加载用户中心的博文列表'''
@@ -86,7 +87,7 @@ class PocoSpider(object):
         # 第一页 最多20篇博文
         for a in articles[5:]:
             try:
-                print(a.a['href'])
+                # print(a.a['href'])
                 self.loadWorkDetail(a.a['href'])
                 # 解析博文
                 # print(a.text)
@@ -143,10 +144,12 @@ class PocoSpider(object):
         imgUrl = media_info['file_url']
         imgUrl = 'http:' + imgUrl
 
-        # print(imgUrl)
-        # print(blogInfo)
-        if (imgHeight>=720 and imgHeight<=1441) and (imgWidth > 1440 and imgWidth < 2000 ) and (imgWidth >= imgHeight):
-            self.downloadImage(imgUrl,imgFilename,imgInfo=ImageInfo)
+
+        # if (imgHeight>=720 and imgHeight<=1441) and (imgWidth > 1440 and imgWidth < 2000 ) and (imgWidth >= imgHeight):
+        if (imgWidth >= imgHeight):
+            print(imgUrl)
+            # print(blogInfo)
+            return self.downloadImage(imgUrl,imgFilename,imgInfo=ImageInfo)
         else:
             print('尺寸不适合(%s,%s), %s' % (imgWidth,imgHeight,imgUrl))
 
