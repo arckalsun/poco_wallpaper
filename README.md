@@ -9,3 +9,4 @@ poco.cn壁纸程序
 python run.py
 ```
 
+目前仅支持Windows操作系统，Linux系统请自行修改代码使用
