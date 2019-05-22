@@ -18,7 +18,7 @@ class ImgText:
         # 预设宽度 可以修改成你需要的图片宽度
         self.fillColor = (0, 0, 0)
         self.text_left = self.img.width // 4
-        self.text_top = 50 // 1080 * self.img.height
+        self.text_top = 100 // 1080 * self.img.height
         self.text_width = self.img.width // 2
         # 文本
         self.text = img_text

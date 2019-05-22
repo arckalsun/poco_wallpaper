@@ -29,22 +29,31 @@ class PocoSpider(object):
             "Referer": "https://www.poco.cn/skill/detail?article_id=32672",
         }
         self.localImageDir = './poco/'
+        self.loadedWorksUrl = set()
 
     def _parseWorksInfo(self,worksInfo):
         for works in worksInfo['list']:
             worksUrl = works['works_url']
             try:
-                # print('加载：' + worksUrl)
-                self.loadWorkDetail(worksUrl)
+                if worksUrl not in self.loadedWorksUrl:
+                    self.loadWorkDetail(worksUrl)
+                    self.loadedWorksUrl.add(worksUrl)
             except TypeError:
                 pass
             except KeyError:
                 pass
 
+    def run(self):
+        for ct in (1,2,3,4,6,21,22):
+            for wt in ('day','medal','editor'):
+                try:
+                    self.loadWorksListByType(ct,wt)
+                except Exception as e:
+                    print('加载失败ct=%s, wt=%s。异常: %s' % (ct,wt,str(e)))
+
     def loadWorksListByType(self, classify_type=0, works_type='medal'):
         '''加载勋章作品
             classify_type:
-                0
                 1   人像
                 2   风景
                 3   生态
@@ -118,8 +127,8 @@ class PocoSpider(object):
 
         ImageInfo = blogInfo + '\n'
         if description: ImageInfo += description + '\n'
-        if click_count: ImageInfo += '浏览量: ' + str(click_count) + '\t'
-        if like_count: ImageInfo += '点赞量: ' + str(like_count) + '\n'
+        # if click_count: ImageInfo += '浏览量: ' + str(click_count) + '\t'
+        # if like_count: ImageInfo += '点赞量: ' + str(like_count) + '\n'
         if user_nickname: ImageInfo += '作者: ' + user_nickname + '\t'
         if user_signature: ImageInfo += '签名: ' + user_signature + '\n'
         if camera_brand_name: ImageInfo += '设备: ' + camera_brand_name + '  ' + camera_model_name
@@ -134,11 +143,12 @@ class PocoSpider(object):
         imgUrl = media_info['file_url']
         imgUrl = 'http:' + imgUrl
 
-        print(imgUrl)
-        print(blogInfo)
-        if (imgHeight>=1080 or imgWidth>=1441) and (imgHeight < 2000):
-            if imgWidth >= imgHeight:
-                self.downloadImage(imgUrl,imgFilename,imgInfo=ImageInfo)
+        # print(imgUrl)
+        # print(blogInfo)
+        if (imgHeight>=720 and imgHeight<=1441) and (imgWidth > 1440 and imgWidth < 2000 ) and (imgWidth >= imgHeight):
+            self.downloadImage(imgUrl,imgFilename,imgInfo=ImageInfo)
+        else:
+            print('尺寸不适合(%s,%s), %s' % (imgWidth,imgHeight,imgUrl))
 
 
     def downloadImage(self, imgUrl, filename,imgInfo=''):

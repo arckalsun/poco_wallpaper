@@ -20,4 +20,7 @@ python run.py
 # 运行Bing爬虫
 python StealBing.py
 ```
-目前仅支持Windows操作系统，Linux系统请自行修改代码使用
+
+- 目前仅支持Windows操作系统，Linux系统请自行修改代码使用
+- 可以手动修改桌面背景图片契合度，Windows 10 的契合度有：填充，适应，
+拉伸，平铺，居中，跨区。

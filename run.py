@@ -22,10 +22,9 @@ def run():
     imgSet = set()
     spider = PocoSpider()
     while True:
-        try:
-            spider.loadWorksListByType()
-        except Exception as e:
-            print('[异常] %s' % str(e))
+
+        spider.run()
+
         # 轮播图片
         for root, dirs, files in os.walk(spider.localImageDir):
             for imgName in files:
@@ -34,7 +33,7 @@ def run():
                     if filename not in imgSet:
                         timeStr = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
                         print('[%s]切换下一张：%s' % (timeStr, filename))
-                        win32gui.SystemParametersInfo(win32con.SPI_SETDESKWALLPAPER, filename, 2)
+                        win32gui.SystemParametersInfo(win32con.SPI_SETDESKWALLPAPER, filename, 3)
                         imgSet.add(filename)
 
                         # time.sleep(SWITCH_TIME)
