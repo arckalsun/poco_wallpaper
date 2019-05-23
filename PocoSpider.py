@@ -146,12 +146,12 @@ class PocoSpider(object):
 
 
         # if (imgHeight>=720 and imgHeight<=1441) and (imgWidth > 1440 and imgWidth < 2000 ) and (imgWidth >= imgHeight):
-        if (imgWidth >= imgHeight):
-            print(imgUrl)
-            # print(blogInfo)
-            return self.downloadImage(imgUrl,imgFilename,imgInfo=ImageInfo)
-        else:
-            print('尺寸不适合(%s,%s), %s' % (imgWidth,imgHeight,imgUrl))
+        # if (imgWidth >= imgHeight):
+        print(imgUrl)
+        # print(blogInfo)
+        return self.downloadImage(imgUrl,imgFilename,imgInfo=ImageInfo)
+        # else:
+        #     print('尺寸不适合(%s,%s), %s' % (imgWidth,imgHeight,imgUrl))
 
 
     def downloadImage(self, imgUrl, filename,imgInfo=''):

@@ -11,21 +11,23 @@ from PIL import Image,ImageFont,ImageDraw
 import numpy as np
 
 class ImgText:
-    font = ImageFont.truetype(r'C:\Windows\Fonts\STZHONGS.TTF',16)
+
 
     def __init__(self, img_path, img_text, img_savepath):
         self.img = Image.open(img_path).convert("RGBA")
         # 预设宽度 可以修改成你需要的图片宽度
         self.fillColor = (0, 0, 0)
         self.text_left = self.img.width // 4
-        self.text_top = 100 // 1080 * self.img.height
+        self.text_top = int(45 * (self.img.height/1080))
         self.text_width = self.img.width // 2
+        self.font = ImageFont.truetype(r'C:\Windows\Fonts\STZHONGS.TTF',int(18*(self.img.height/1080)))
         # 文本
         self.text = img_text
         self.img_savepath = img_savepath
         # 段落 , 行数, 行高
         self.duanluo, self.note_height, self.line_height = self.split_text()
 
+        # print('文本区位置(%s,%s) 文字大小%s' % (self.text_left,self.text_top,self.font.size))
 
     def get_duanluo(self, text):
         txt = Image.new('RGBA', (100, 100), (255, 255, 255, 0))
@@ -39,7 +41,7 @@ class ImgText:
         # 行高
         line_height = 1
         for char in text:
-            width, height = draw.textsize(char, ImgText.font)
+            width, height = draw.textsize(char, self.font)
             sum_width += width
             if sum_width > self.text_width:  # 超过预设宽度就修改段落 以及当前行数
                 line_count += 1
@@ -74,7 +76,7 @@ class ImgText:
         # 左上角开始
         x, y = self.text_left, self.text_top
         for duanluo, line_count in self.duanluo:
-            draw.text((x, y), duanluo, fill=self.fillColor, font=ImgText.font)
+            draw.text((x, y), duanluo, fill=self.fillColor, font=self.font)
             y += self.line_height * line_count
         self.img.save(self.img_savepath)
 
@@ -92,7 +94,7 @@ class ImgText:
 
 
 if __name__ == '__main__':
-    n = ImgText(r'D:\我的文档\python项目\Twisted学习\wallpaper\poco\1.bmp',
+    n = ImgText(r'D:\我的文档\python项目\Twisted学习\wallpaper\poco\file_1558486616158_3890.747240133973.bmp',
                 "测试一下，就好了。" * 30, r'D:\我的文档\python项目\Twisted学习\wallpaper\poco\1_mark.bmp')
     n.draw_text()
     # n.detect_gray()

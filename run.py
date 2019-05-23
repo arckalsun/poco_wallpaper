@@ -28,8 +28,6 @@ def run():
                 print('[%s]切换下一张：%s' % (timeStr, filename))
                 win32gui.SystemParametersInfo(win32con.SPI_SETDESKWALLPAPER, filename, 3)
                 imgSet.add(filename)
-
-                # time.sleep(SWITCH_TIME)
                 t = threading.Thread(target=input, args=('键入[回车]切换\n',))
                 t.start()
                 t.join(SWITCH_TIME)
